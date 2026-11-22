@@ -1,0 +1,5 @@
+#!/bin/sh
+# MediFlow Maven Wrapper — delegates to system Maven (3.9.x required)
+# Set JAVA_HOME before running:
+#   export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+exec mvn "$@"
