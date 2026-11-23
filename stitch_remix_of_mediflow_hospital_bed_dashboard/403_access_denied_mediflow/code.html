@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "background": "#f8f9ff",
+        "on-tertiary-fixed-variant": "#005236",
+        "error-container": "#ffdad6",
+        "on-tertiary-fixed": "#002113",
+        "inverse-surface": "#213145",
+        "primary": "#004ac6",
+        "on-error-container": "#93000a",
+        "on-primary-fixed-variant": "#003ea8",
+        "primary-fixed": "#dbe1ff",
+        "status-warning": "#F59E0B",
+        "on-tertiary-container": "#bdffdb",
+        "outline-variant": "#c3c6d7",
+        "tertiary-container": "#007d55",
+        "secondary-fixed-dim": "#c3c0ff",
+        "inverse-primary": "#b4c5ff",
+        "tertiary-fixed-dim": "#4edea3",
+        "canvas": "#F8FAFC",
+        "surface-container-lowest": "#ffffff",
+        "surface": "#f8f9ff",
+        "surface-card": "#FFFFFF",
+        "secondary-fixed": "#e2dfff",
+        "on-error": "#ffffff",
+        "secondary-container": "#645efb",
+        "outline": "#737686",
+        "surface-dim": "#cbdbf5",
+        "status-critical": "#EF4444",
+        "tertiary": "#006242",
+        "error": "#ba1a1a",
+        "surface-container-low": "#eff4ff",
+        "surface-tint": "#0053db",
+        "surface-bright": "#f8f9ff",
+        "on-secondary-fixed-variant": "#3323cc",
+        "surface-container-highest": "#d3e4fe",
+        "secondary": "#4b41e1",
+        "border-subtle": "#E2E8F0",
+        "on-secondary-fixed": "#0f0069",
+        "inverse-on-surface": "#eaf1ff",
+        "surface-variant": "#d3e4fe",
+        "on-primary": "#ffffff",
+        "on-background": "#0b1c30",
+        "surface-container": "#e5eeff",
+        "on-primary-container": "#eeefff",
+        "on-secondary": "#ffffff",
+        "primary-fixed-dim": "#b4c5ff",
+        "on-primary-fixed": "#00174b",
+        "on-tertiary": "#ffffff",
+        "on-secondary-container": "#fffbff",
+        "tertiary-fixed": "#6ffbbe",
+        "primary-container": "#2563eb",
+        "on-surface": "#0b1c30",
+        "surface-container-high": "#dce9ff",
+        "on-surface-variant": "#434655"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "space-sm": "0.5rem",
+        "space-xl": "1.5rem",
+        "space-md": "0.75rem",
+        "gutter": "1rem",
+        "gutter-lg": "1.5rem",
+        "space-xs": "0.25rem",
+        "margin": "1rem",
+        "margin-lg": "2rem",
+        "space-lg": "1rem"
+      },
+      "fontFamily": {
+        "body-md": [
+          "Inter"
+        ],
+        "body-lg": [
+          "Inter"
+        ],
+        "headline-xl": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-lg-mobile": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-xl-mobile": [
+          "Plus Jakarta Sans"
+        ],
+        "label-sm": [
+          "JetBrains Mono"
+        ],
+        "headline-md": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-lg": [
+          "Plus Jakarta Sans"
+        ],
+        "label-md": [
+          "JetBrains Mono"
+        ],
+        "body-sm": [
+          "Inter"
+        ],
+        "label-lg": [
+          "JetBrains Mono"
+        ]
+      },
+      "fontSize": {
+        "body-md": [
+          "14px",
+          {
+            "lineHeight": "20px",
+            "letterSpacing": "-0.005em",
+            "fontWeight": "400"
+          }
+        ],
+        "body-lg": [
+          "16px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "-0.01em",
+            "fontWeight": "400"
+          }
+        ],
+        "headline-xl": [
+          "32px",
+          {
+            "lineHeight": "40px",
+            "letterSpacing": "-0.025em",
+            "fontWeight": "700"
+          }
+        ],
+        "headline-lg-mobile": [
+          "20px",
+          {
+            "lineHeight": "28px",
+            "letterSpacing": "-0.015em",
+            "fontWeight": "600"
+          }
+        ],
+        "headline-xl-mobile": [
+          "24px",
+          {
+            "lineHeight": "32px",
+            "letterSpacing": "-0.02em",
+            "fontWeight": "700"
+          }
+        ],
+        "label-sm": [
+          "11px",
+          {
+            "lineHeight": "14px",
+            "letterSpacing": "0.05em",
+            "fontWeight": "500"
+          }
+        ],
+        "headline-md": [
+          "18px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "-0.015em",
+            "fontWeight": "600"
+          }
+        ],
+        "headline-lg": [
+          "24px",
+          {
+            "lineHeight": "32px",
+            "letterSpacing": "-0.02em",
+            "fontWeight": "600"
+          }
+        ],
+        "label-md": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0.025em",
+            "fontWeight": "500"
+          }
+        ],
+        "body-sm": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0em",
+            "fontWeight": "400"
+          }
+        ],
+        "label-lg": [
+          "14px",
+          {
+            "lineHeight": "20px",
+            "letterSpacing": "0em",
+            "fontWeight": "500"
+          }
+        ]
+      }
+    }
+  }
+};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[20px]">local_hospital</span></div><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-headline-md text-headline-md tracking-tight text-on-surface font-bold">MediFlow</span><span class="font-label-sm text-label-sm uppercase px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-bold tracking-wider">OS</span></div><span class="font-label-sm text-label-sm text-outline tracking-wider">CLINICAL v3.2.4</span></div></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline px-space-md block mb-space-xs">Operations</span><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-medium shadow-sm"><a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="live-ward-grid" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Live Ward Grid</span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="er-triage-queue" href="#"><div class="flex items-center gap-3 flex-1"><span class="material-symbols-outlined text-[20px]">emergency</span><span class="font-body-md text-body-md">ER Triage Queue</span></div><span class="px-1.5 py-0.5 rounded-full bg-status-critical text-on-error font-label-sm text-label-sm font-semibold">6</span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="admission-logs" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span class="font-body-md text-body-md">Admission Logs</span></a></nav></div></div><div class="p-space-md m-space-md rounded-xl bg-surface-container-low"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-body-md text-body-md font-semibold text-on-surface truncate">Sarah Jenkins, RN</span><span class="font-label-sm text-label-sm text-outline truncate">Charge Nurse — Trauma B</span></div><span class="material-symbols-outlined text-on-surface-variant text-[18px] cursor-pointer hover:text-on-surface">more_vert</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40"><div class="w-full h-full px-margin-lg flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-2 px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer transition-colors"><span class="material-symbols-outlined text-primary text-[18px]">domain</span><span class="font-body-md text-body-md font-medium">St. Jude Memorial — Main Campus</span><span class="material-symbols-outlined text-outline text-[16px]">expand_more</span></div><div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span><span class="font-label-sm text-label-sm font-medium uppercase text-tertiary tracking-wide">Live Sync Connected</span></div></div><div class="flex items-center gap-space-md flex-1 max-w-md"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span><input class="w-full h-9 pl-9 pr-14 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Quick search beds, MRN, clinician..." type="text"><div class="absolute right-2 px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-outline select-none">⌘K</div></div></div><div class="flex items-center gap-space-md shrink-0"><button class="flex items-center gap-2 h-9 px-space-md rounded-lg bg-primary-container hover:bg-primary text-on-primary font-body-md text-body-md font-medium transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">person_add</span><span>Quick Admit</span></button><div class="flex items-center gap-1"><button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Toggle Audio Alerts" type="button"><span class="material-symbols-outlined text-[20px]">volume_up</span></button><button class="relative w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Notifications" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-status-critical"></span></button></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="relative w-full min-h-[calc(100vh-4rem)] p-margin-lg flex flex-col justify-between overflow-hidden">
+<!-- Ambient Clinical Mesh Glows -->
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-gradient-to-b from-error-container/35 via-primary-fixed/20 to-transparent blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute bottom-10 right-12 w-96 h-96 bg-primary-container/5 rounded-full blur-2xl pointer-events-none -z-10"></div>
+<!-- Top Metadata Bar -->
+<div class="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-status-critical"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">SECURITY PROTOCOL VIOLATION</span>
+<span class="text-outline text-body-sm">•</span>
+<span class="font-label-sm text-label-sm text-outline">POLICY ID: HIPAA-45-CFR-§164.312</span>
+</div>
+<div class="flex items-center gap-2 px-space-md py-1 rounded-full bg-surface-container-low shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-error">gpp_maybe</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">AUTH_FAIL_CODE: 0x403_ADMIN_RESTRICTED</span>
+</div>
+</div>
+<!-- Central Error Manifest -->
+<div class="w-full max-w-4xl mx-auto my-auto py-space-xl flex flex-col items-center text-center">
+<!-- Primary Clinical Security Shield -->
+<div class="relative mb-space-lg group">
+<div class="absolute -inset-2 rounded-3xl bg-error-container/40 blur-xl transition-all duration-500 group-hover:bg-error-container/60"></div>
+<div class="relative w-24 h-24 rounded-3xl bg-surface-container-lowest shadow-[0_8px_24px_rgba(15,23,42,0.06)] flex items-center justify-center">
+<div class="w-16 h-16 rounded-2xl bg-error-container/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-[36px] text-error" style="font-variation-settings: 'FILL' 1;">shield_lock</span>
+</div>
+<span class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-status-critical text-on-error flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[16px]">block</span>
+</span>
+</div>
+</div>
+<!-- HTTP Status Pill -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-error-container/70 mb-space-md">
+<span class="w-1.5 h-1.5 rounded-full bg-status-critical animate-ping"></span>
+<span class="font-label-sm text-label-sm uppercase font-bold text-on-error-container tracking-widest">ERROR 403 • FORBIDDEN</span>
+</div>
+<!-- Main Headline -->
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight max-w-2xl">
+        Access Denied: Restricted Administrative Resource
+      </h1>
+<!-- Subtitle Description -->
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mt-space-md leading-relaxed">
+        Your current account credentials (<span class="font-semibold text-on-surface">Sarah Jenkins, RN</span> — Role: <span class="font-semibold text-on-surface">NURSE</span>) do not have permissions to access the Admin Management &amp; Role Allocation console. This resource requires <span class="font-semibold text-on-surface">ADMIN</span> privileges under hospital security protocol <span class="font-label-md text-label-md text-primary font-semibold">HIPAA-45-CFR</span>.
+      </p>
+<!-- Detailed Clinical Verification Card -->
+<div class="w-full max-w-2xl mt-space-xl text-left bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="px-space-lg py-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">badge</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-semibold">Session Audit Trace</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-outline">
+<span class="w-2 h-2 rounded-full bg-status-warning"></span>
+<span>Elevation Blocked</span>
+</div>
+</div>
+<div class="p-space-lg grid grid-cols-1 md:grid-cols-2 gap-y-space-md gap-x-space-lg">
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">User Identity</span>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Sarah Jenkins, RN</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-mono">#CL-9014</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Assigned Role</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-label-md text-label-md font-semibold text-primary">NURSE</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(Clinical ER Coordinator)</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Required Role</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="font-label-md text-label-md font-bold text-error">ADMIN</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">or IT Security Officer</span>
+</div>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Session Context</span>
+<div class="font-label-md text-label-md text-on-surface-variant font-mono mt-0.5 flex items-center gap-2">
+<span id="live-trace-time">04:23:32 UTC</span>
+<span class="text-outline-variant">•</span>
+<span>Ward A / Term-01</span>
+</div>
+</div>
+</div>
+<!-- Telemetry Diagnostic Line -->
+<div class="px-space-lg py-2.5 bg-surface-container/40 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline">lock_clock</span>
+<span>Target Node: <code class="text-primary font-mono font-medium">/sys/admin/role-allocations</code></span>
+</div>
+<span class="text-outline">IP: 10.240.18.92</span>
+</div>
+</div>
+<!-- Action Cluster -->
+<div class="mt-space-xl flex flex-wrap items-center justify-center gap-space-md">
+<!-- Primary Action -->
+<a class="flex items-center gap-2 h-11 px-space-xl rounded-lg bg-primary-container hover:bg-primary text-on-primary font-body-md text-body-md font-medium transition-all shadow-sm hover:shadow-md cursor-pointer" data-path="live-ward-grid" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Return to Live Ward Grid</span>
+</a>
+<!-- Secondary Action -->
+<button class="flex items-center gap-2 h-11 px-space-xl rounded-lg bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-body-md text-body-md font-medium transition-all shadow-sm hover:shadow cursor-pointer" id="requestUpgradeBtn" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">contact_support</span>
+<span>Request Role Upgrade</span>
+</button>
+</div>
+<!-- Emergency Help Callout -->
+<div class="mt-space-lg flex items-center gap-2 px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-status-warning shrink-0">emergency_home</span>
+<span class="font-body-sm text-body-sm text-left">
+          Need emergency access for urgent clinical triage? Contact Charge Administrator on speed dial <span class="font-label-md text-label-md text-primary font-semibold">ext. 4409</span> or radio <span class="font-semibold text-on-surface">Channel 3</span>.
+        </span>
+</div>
+<!-- Toast Notification Placeholder for Micro-interaction -->
+<div class="fixed bottom-6 right-6 hidden transform translate-y-4 opacity-0 transition-all duration-300 z-50" id="toastNotification">
+<div class="bg-surface-container-lowest rounded-xl shadow-xl p-space-md flex items-start gap-3 max-w-sm">
+<div class="w-8 h-8 rounded-lg bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div class="flex flex-col text-left">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Elevation Request Dispatched</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ticket #SEC-4920 routed to Hospital On-Duty SysAdmin. Review SLA: &lt; 5 mins.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Operational Safety Footer -->
+<div class="w-full pt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-sm text-outline font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>MediFlow Sentinel Access Control Engine • Ver: 3.2.4-prod</span>
+</div>
+<div class="flex items-center gap-4">
+<span>TLS 1.3 FIPS-140-3 Compliant</span>
+<span>•</span>
+<span>Node ID: REGION-EAST-B04</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Dynamic trace timestamp simulation in UTC
+    function updateClock() {
+      const el = document.getElementById('live-trace-time');
+      if (el) {
+        const now = new Date();
+        const hrs = String(now.getUTCHours()).padStart(2, '0');
+        const mins = String(now.getUTCMinutes()).padStart(2, '0');
+        const secs = String(now.getUTCSeconds()).padStart(2, '0');
+        el.textContent = hrs + ':' + mins + ':' + secs + ' UTC';
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Micro-interaction for role upgrade request
+    const btn = document.getElementById('requestUpgradeBtn');
+    const toast = document.getElementById('toastNotification');
+    if (btn && toast) {
+      btn.addEventListener('click', function() {
+        btn.classList.add('opacity-70', 'pointer-events-none');
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Submitting Request...</span>';
+        
+        setTimeout(function() {
+          btn.classList.remove('opacity-70', 'pointer-events-none');
+          btn.innerHTML = '<span class="material-symbols-outlined text-[18px] text-tertiary">check</span><span>Upgrade Request Pending</span>';
+          
+          toast.classList.remove('hidden');
+          setTimeout(function() {
+            toast.classList.remove('translate-y-4', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+          }, 20);
+
+          setTimeout(function() {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(function() {
+              toast.classList.add('hidden');
+            }, 300);
+          }, 6000);
+        }, 800);
+      });
+    }
+  })();
+</script></main></div>
+
+
+
+</body></html>

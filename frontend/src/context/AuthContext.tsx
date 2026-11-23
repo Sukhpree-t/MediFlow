@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { UserSession } from '../types';
 
 interface AuthContextType {
   user: UserSession | null;
   login: (session: UserSession) => void;
   logout: () => void;
+  switchTerminal: (terminalId: string) => void;
   isAuthenticated: boolean;
 }
 
@@ -28,8 +29,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const switchTerminal = (terminalId: string) => {
+    if (!user) return;
+    const updated = { ...user, terminalId };
+    sessionStorage.setItem('mediflow_user', JSON.stringify(updated));
+    setUser(updated);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, switchTerminal, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

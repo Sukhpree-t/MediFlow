@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "background": "#f8f9ff",
+        "on-tertiary-fixed-variant": "#005236",
+        "error-container": "#ffdad6",
+        "on-tertiary-fixed": "#002113",
+        "inverse-surface": "#213145",
+        "primary": "#004ac6",
+        "on-error-container": "#93000a",
+        "on-primary-fixed-variant": "#003ea8",
+        "primary-fixed": "#dbe1ff",
+        "status-warning": "#F59E0B",
+        "on-tertiary-container": "#bdffdb",
+        "outline-variant": "#c3c6d7",
+        "tertiary-container": "#007d55",
+        "secondary-fixed-dim": "#c3c0ff",
+        "inverse-primary": "#b4c5ff",
+        "tertiary-fixed-dim": "#4edea3",
+        "canvas": "#F8FAFC",
+        "surface-container-lowest": "#ffffff",
+        "surface": "#f8f9ff",
+        "surface-card": "#FFFFFF",
+        "secondary-fixed": "#e2dfff",
+        "on-error": "#ffffff",
+        "secondary-container": "#645efb",
+        "outline": "#737686",
+        "surface-dim": "#cbdbf5",
+        "status-critical": "#EF4444",
+        "tertiary": "#006242",
+        "error": "#ba1a1a",
+        "surface-container-low": "#eff4ff",
+        "surface-tint": "#0053db",
+        "surface-bright": "#f8f9ff",
+        "on-secondary-fixed-variant": "#3323cc",
+        "surface-container-highest": "#d3e4fe",
+        "secondary": "#4b41e1",
+        "border-subtle": "#E2E8F0",
+        "on-secondary-fixed": "#0f0069",
+        "inverse-on-surface": "#eaf1ff",
+        "surface-variant": "#d3e4fe",
+        "on-primary": "#ffffff",
+        "on-background": "#0b1c30",
+        "surface-container": "#e5eeff",
+        "on-primary-container": "#eeefff",
+        "on-secondary": "#ffffff",
+        "primary-fixed-dim": "#b4c5ff",
+        "on-primary-fixed": "#00174b",
+        "on-tertiary": "#ffffff",
+        "on-secondary-container": "#fffbff",
+        "tertiary-fixed": "#6ffbbe",
+        "primary-container": "#2563eb",
+        "on-surface": "#0b1c30",
+        "surface-container-high": "#dce9ff",
+        "on-surface-variant": "#434655"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "space-sm": "0.5rem",
+        "space-xl": "1.5rem",
+        "space-md": "0.75rem",
+        "gutter": "1rem",
+        "gutter-lg": "1.5rem",
+        "space-xs": "0.25rem",
+        "margin": "1rem",
+        "margin-lg": "2rem",
+        "space-lg": "1rem"
+      },
+      "fontFamily": {
+        "body-md": [
+          "Inter"
+        ],
+        "body-lg": [
+          "Inter"
+        ],
+        "headline-xl": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-lg-mobile": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-xl-mobile": [
+          "Plus Jakarta Sans"
+        ],
+        "label-sm": [
+          "JetBrains Mono"
+        ],
+        "headline-md": [
+          "Plus Jakarta Sans"
+        ],
+        "headline-lg": [
+          "Plus Jakarta Sans"
+        ],
+        "label-md": [
+          "JetBrains Mono"
+        ],
+        "body-sm": [
+          "Inter"
+        ],
+        "label-lg": [
+          "JetBrains Mono"
+        ]
+      },
+      "fontSize": {
+        "body-md": [
+          "14px",
+          {
+            "lineHeight": "20px",
+            "letterSpacing": "-0.005em",
+            "fontWeight": "400"
+          }
+        ],
+        "body-lg": [
+          "16px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "-0.01em",
+            "fontWeight": "400"
+          }
+        ],
+        "headline-xl": [
+          "32px",
+          {
+            "lineHeight": "40px",
+            "letterSpacing": "-0.025em",
+            "fontWeight": "700"
+          }
+        ],
+        "headline-lg-mobile": [
+          "20px",
+          {
+            "lineHeight": "28px",
+            "letterSpacing": "-0.015em",
+            "fontWeight": "600"
+          }
+        ],
+        "headline-xl-mobile": [
+          "24px",
+          {
+            "lineHeight": "32px",
+            "letterSpacing": "-0.02em",
+            "fontWeight": "700"
+          }
+        ],
+        "label-sm": [
+          "11px",
+          {
+            "lineHeight": "14px",
+            "letterSpacing": "0.05em",
+            "fontWeight": "500"
+          }
+        ],
+        "headline-md": [
+          "18px",
+          {
+            "lineHeight": "24px",
+            "letterSpacing": "-0.015em",
+            "fontWeight": "600"
+          }
+        ],
+        "headline-lg": [
+          "24px",
+          {
+            "lineHeight": "32px",
+            "letterSpacing": "-0.02em",
+            "fontWeight": "600"
+          }
+        ],
+        "label-md": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0.025em",
+            "fontWeight": "500"
+          }
+        ],
+        "body-sm": [
+          "12px",
+          {
+            "lineHeight": "16px",
+            "letterSpacing": "0em",
+            "fontWeight": "400"
+          }
+        ],
+        "label-lg": [
+          "14px",
+          {
+            "lineHeight": "20px",
+            "letterSpacing": "0em",
+            "fontWeight": "500"
+          }
+        ]
+      }
+    }
+  }
+};</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md"><div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[20px]">local_hospital</span></div><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-headline-md text-headline-md tracking-tight text-on-surface font-bold">MediFlow</span><span class="font-label-sm text-label-sm uppercase px-1.5 py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-bold tracking-wider">OS</span></div><span class="font-label-sm text-label-sm text-outline tracking-wider">CLINICAL v3.2.4</span></div></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm uppercase tracking-wider text-outline px-space-md block mb-space-xs">Operations</span><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-medium shadow-sm"><a aria-current="page" class="flex items-center gap-3 px-space-md py-2.5 rounded-lg transition-colors bg-primary-container text-on-primary font-medium shadow-sm" data-path="live-ward-grid" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Live Ward Grid</span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="er-triage-queue" href="#"><span class="material-symbols-outlined text-[20px]">emergency</span><span class="font-body-md text-body-md">ER Triage Queue</span><span class="ml-auto px-1.5 py-0.2 rounded-full bg-status-critical/15 text-status-critical font-label-sm text-label-sm font-bold">6</span></a><a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="admission-logs" href="#"><span class="material-symbols-outlined text-[20px]">assignment</span><span class="font-body-md text-body-md">Admission Logs</span></a></nav></div></div><div class="p-space-md m-space-md rounded-xl bg-surface-container-low"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0 flex-1"><span class="font-body-md text-body-md font-semibold text-on-surface truncate">Sarah Jenkins, RN</span><span class="font-label-sm text-label-sm text-outline truncate">Charge Nurse — Trauma B</span></div><span class="material-symbols-outlined text-on-surface-variant text-[18px] cursor-pointer hover:text-on-surface">more_vert</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40"><div class="w-full h-full px-margin-lg flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-2 px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer transition-colors"><span class="material-symbols-outlined text-primary text-[18px]">domain</span><span class="font-body-md text-body-md font-medium">St. Jude Memorial — Main Campus</span><span class="material-symbols-outlined text-outline text-[16px]">expand_more</span></div><div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-error-container/40">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-critical opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-critical"></span>
+          </span>
+          <span class="font-label-sm text-label-sm font-semibold uppercase text-error tracking-wide">Connection Dropped</span>
+        </div></div><div class="flex items-center gap-space-md flex-1 max-w-md"><div class="relative w-full flex items-center"><span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">search</span><input class="w-full h-9 pl-9 pr-14 rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="Quick search beds, MRN, clinician..." type="text"><div class="absolute right-2 px-1.5 py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-outline select-none">⌘K</div></div></div><div class="flex items-center gap-space-md shrink-0"><button class="flex items-center gap-2 h-9 px-space-md rounded-lg font-body-md text-body-md font-medium transition-colors bg-surface-container-high text-outline cursor-not-allowed opacity-60" type="button" disabled="" title="System Offline: Emergency admits disabled to prevent double-booking"><span class="material-symbols-outlined text-[18px]">person_add</span><span>Quick Admit</span></button><div class="flex items-center gap-1"><button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Toggle Audio Alerts" type="button"><span class="material-symbols-outlined text-[20px]">volume_up</span></button><button class="relative w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Notifications" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-status-critical"></span></button></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Interactive Client-side Script to update Shell State & Micro-interactions -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Highlight 'Live Ward Grid' navigation item in sidebar
+      const navLinks = document.querySelectorAll('aside nav a');
+      navLinks.forEach(link => {
+        if (link.getAttribute('data-path') === 'live-ward-grid') {
+          link.classList.remove('text-on-surface-variant', 'hover:bg-surface-container');
+          link.classList.add('bg-primary-container', 'text-on-primary', 'font-medium', 'shadow-sm');
+        }
+      });
+
+      // 2. Mutate header live sync badge to offline state
+      const headerPill = document.querySelector('header .bg-surface-container-low:has(.animate-pulse)');
+      if (headerPill) {
+        headerPill.innerHTML = `
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-critical opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-status-critical"></span>
+          </span>
+          <span class="font-label-sm text-label-sm font-semibold uppercase text-error tracking-wide">Connection Dropped</span>
+        `;
+        headerPill.classList.remove('bg-surface-container-low');
+        headerPill.classList.add('bg-error-container/40');
+      }
+
+      // 3. Disable header Quick Admit button
+      const quickAdmitBtn = document.querySelector('header button:has(.material-symbols-outlined)');
+      if (quickAdmitBtn && quickAdmitBtn.textContent.includes('Quick Admit')) {
+        quickAdmitBtn.disabled = true;
+        quickAdmitBtn.classList.remove('bg-primary-container', 'hover:bg-primary', 'text-on-primary', 'shadow-sm');
+        quickAdmitBtn.classList.add('bg-surface-container-high', 'text-outline', 'cursor-not-allowed', 'opacity-60');
+        quickAdmitBtn.setAttribute('title', 'System Offline: Emergency admits disabled to prevent double-booking');
+      }
+    });
+
+    function triggerManualRetry(btn) {
+      btn.disabled = true;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> Handshaking...`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">sync_problem</span> Retry Failed (4/10)`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 2400);
+      }, 1600);
+    }
+  </script>
+<!-- High-Visibility Clinical Safety Banner: Connection Lost -->
+<div class="sticky top-16 z-30 w-full bg-error-container text-on-error-container shadow-md">
+<div class="px-margin-lg py-3 flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-3">
+<div class="relative flex h-3.5 w-3.5 shrink-0 items-center justify-center">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-status-critical opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-status-critical"></span>
+</div>
+<div class="w-7 h-7 rounded-lg bg-error text-on-error flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">cloud_off</span>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+<span class="font-headline-md text-headline-md font-bold tracking-tight text-on-error-container flex items-center gap-2">
+            Connection lost. Reconnecting...
+            <span class="hidden md:inline-flex px-2 py-0.5 rounded-full bg-error/15 font-label-sm text-label-sm uppercase font-semibold text-error tracking-wider">
+              Safety Lock Active
+            </span>
+</span>
+<span class="font-body-sm text-body-sm text-on-error-container/80 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error/60"></span>
+            Last sync: 42s ago • Attempting reconnect (3 of 10) • Bed changes are paused
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-8 px-3 rounded-lg bg-error hover:bg-error/90 text-on-error font-body-sm text-body-sm font-medium transition-all shadow-sm flex items-center gap-1.5 active:scale-95" onclick="triggerManualRetry(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>Retry Now</span>
+</button>
+<button class="h-8 px-3 rounded-lg bg-surface-container-lowest/80 hover:bg-surface-container-lowest text-on-error-container font-body-sm text-body-sm font-medium transition-colors shadow-sm flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[16px]">network_check</span>
+<span>Network Diagnostic</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Content Space -->
+<div class="px-margin-lg py-space-xl flex flex-col gap-space-xl max-w-[1720px] mx-auto w-full">
+<!-- Ward Overview Bento Banner -->
+<div class="grid grid-cols-1 md:grid-cols-4 xl:grid-cols-12 gap-gutter bg-surface-container-lowest rounded-xl p-space-lg shadow-sm">
+<!-- Unit Meta Title & Live Switcher -->
+<div class="xl:col-span-4 flex flex-col justify-between p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Clinical Unit</span>
+<span class="px-1.5 py-0.5 rounded bg-status-critical/10 text-status-critical font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">lock</span> Read-Only
+              </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface mt-1">Main Clinical Ward (ICU &amp; General)</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Inpatient Trauma &amp; Acute Critical Care • Tower B, 2nd Floor</p>
+</div>
+<div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[24px]">local_hospital</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between">
+<div class="flex items-center gap-2 text-outline font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">sensors_off</span>
+<span>WebSocket heartbeat disconnected: 10.240.12.8</span>
+</div>
+<span class="font-label-sm text-label-sm text-error font-semibold">ERR_SOCKET_TIMEOUT</span>
+</div>
+</div>
+<!-- Metric 1: Capacity -->
+<div class="xl:col-span-2 flex flex-col justify-between p-space-md rounded-lg bg-surface">
+<div class="flex items-center justify-between text-outline">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Total Beds</span>
+<span class="material-symbols-outlined text-[18px]">single_bed</span>
+</div>
+<div class="my-2">
+<div class="font-headline-xl text-headline-xl font-bold text-on-surface">160</div>
+<span class="font-body-sm text-body-sm text-outline">160 Licensed Capacity (132 Occupied, 83% Occupancy, 22 Available, 6 Turnover)</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<!-- Metric 2: Available Beds -->
+<div class="xl:col-span-2 flex flex-col justify-between p-space-md rounded-lg bg-surface">
+<div class="flex items-center justify-between text-outline">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Available</span>
+<span class="material-symbols-outlined text-[18px] text-tertiary">check_circle</span>
+</div>
+<div class="my-2">
+<div class="font-headline-xl text-headline-xl font-bold text-tertiary">22</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">14 Sanitized • 8 Turnover</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 13.75%"></div>
+</div>
+</div>
+<!-- Metric 3: Occupancy -->
+<div class="xl:col-span-2 flex flex-col justify-between p-space-md rounded-lg bg-surface">
+<div class="flex items-center justify-between text-outline">
+<span class="font-label-sm text-label-sm uppercase font-semibold tracking-wider">Occupancy</span>
+<span class="material-symbols-outlined text-[18px] text-status-warning">pie_chart</span>
+</div>
+<div class="my-2">
+<div class="font-headline-xl text-headline-xl font-bold text-on-surface">83%</div>
+<span class="font-body-sm text-body-sm text-outline">132 Occupied • 5 Reserved</span>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-status-warning h-full rounded-full" style="width: 83%"></div>
+</div>
+</div>
+<!-- Metric 4: Triage Inbound Lock -->
+<div class="xl:col-span-2 flex flex-col justify-between p-space-md rounded-lg bg-error-container/30">
+<div class="flex items-center justify-between text-error">
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider">Holding Queue</span>
+<span class="material-symbols-outlined text-[18px]">lock_clock</span>
+</div>
+<div class="my-2"><div class="font-headline-xl text-headline-xl font-bold text-on-error-container">6 Patients</div><span class="font-body-sm text-body-sm text-error">Queued in ER Hallway</span></div>
+<div class="px-2 py-1 rounded bg-error/10 text-error font-label-sm text-label-sm font-semibold tracking-tight text-center">
+          Transfers Blocked
+        </div>
+</div>
+</div>
+<!-- Ward Filter Controls & Sync Lockdown Notice -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-low p-space-md rounded-xl">
+<div class="flex flex-wrap items-center gap-2"><div class="px-3 py-1.5 rounded-lg bg-surface-container-lowest font-body-sm text-body-sm font-medium text-on-surface shadow-sm flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-status-critical"></span><span>All Wards</span></div><div class="px-3 py-1.5 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high cursor-pointer transition-colors">ICU</div><div class="px-3 py-1.5 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high cursor-pointer transition-colors">General</div><div class="px-3 py-1.5 rounded-lg bg-surface-container font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high cursor-pointer transition-colors">Isolation</div><div class="h-5 w-[1px] bg-outline-variant mx-1"></div><button class="flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm px-2 py-1 hover:text-on-surface" type="button"><span class="material-symbols-outlined text-[18px]">filter_list</span><span>Filter</span></button></div>
+<!-- Offline Safety Tooltip Badge -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-highest text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-status-warning text-[18px]">shield</span>
+<span>Local caching active: Mutations and clinical allocations restricted</span>
+</div>
+</div>
+<!-- Ward Grid: Level 1 Trauma Bays (8 Cards with Disabled Mutative States) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter"><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-85"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">ICU-01</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm">ICU</span></div><span class="px-2 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Available</span></div><div class="py-6 flex flex-col items-center justify-center text-center bg-surface/60 rounded-lg my-space-md"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline mb-2"><span class="material-symbols-outlined text-[20px]">sanitizer</span></div><span class="font-body-md text-body-md font-medium text-on-surface">Ready for intake</span><span class="font-label-sm text-label-sm text-outline mt-0.5">Ventilator on standby</span></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Assign Patient</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-90"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">ICU-02</span><span class="px-2 py-0.5 rounded-full bg-error-container/40 text-error font-label-sm text-label-sm font-semibold">ESI 1</span></div><span class="px-2 py-0.5 rounded-full bg-error/10 text-error font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span> Occupied</span></div><div class="p-space-md bg-surface-container-low rounded-lg my-space-md flex flex-col gap-2"><div class="flex items-start justify-between"><div class="flex flex-col"><span class="font-body-md text-body-md font-bold text-on-surface">J. Davis #8821</span><span class="font-label-sm text-label-sm text-outline">ESI 1 • Resuscitation</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant font-mono">Dr. Vance</span></div><p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">STEMI Protocol • Acute Cardiac Care</p><div class="flex items-center gap-3 pt-1 text-outline font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">ecg_heart</span> 118 bpm</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">blood_pressure</span> 92/58</span></div></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Transfer / Discharge</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Bed release locked offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-90"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">ICU-03</span><span class="px-2 py-0.5 rounded-full bg-status-warning/15 text-on-surface font-label-sm text-label-sm font-semibold">ESI 2</span></div><span class="px-2 py-0.5 rounded-full bg-error/10 text-error font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> Occupied</span></div><div class="p-space-md bg-surface-container-low rounded-lg my-space-md flex flex-col gap-2"><div class="flex items-start justify-between"><div class="flex flex-col"><span class="font-body-md text-body-md font-bold text-on-surface">M. Klein #9042</span><span class="font-label-sm text-label-sm text-outline">ESI 2 • High Risk</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant font-mono">Dr. Roberts</span></div><p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Acute Respiratory • High Flow O2</p><div class="flex items-center gap-3 pt-1 text-outline font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">monitor_heart</span> Normal Sinus</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">air</span> 99% Room Air</span></div></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Transfer / Discharge</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-85"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">ICU-04</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm">TURNOVER</span></div><span class="px-2 py-0.5 rounded-full bg-status-warning/15 text-status-warning font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-status-warning animate-pulse"></span> Cleaning</span></div><div class="py-6 flex flex-col items-center justify-center text-center bg-surface/60 rounded-lg my-space-md"><div class="w-10 h-10 rounded-full bg-status-warning/10 flex items-center justify-center text-status-warning mb-2"><span class="material-symbols-outlined text-[20px]">cleaning_services</span></div><span class="font-body-md text-body-md font-medium text-on-surface">Terminal Disinfection</span><span class="font-label-sm text-label-sm text-outline mt-0.5">Estimated ready in ~12 min</span></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Expedite Clean</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-85"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">GEN-101</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm">GENERAL</span></div><span class="px-2 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Available</span></div><div class="py-6 flex flex-col items-center justify-center text-center bg-surface/60 rounded-lg my-space-md"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline mb-2"><span class="material-symbols-outlined text-[20px]">sanitizer</span></div><span class="font-body-md text-body-md font-medium text-on-surface">Ready for intake</span><span class="font-label-sm text-label-sm text-outline mt-0.5">Telemetry verified</span></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Assign Patient</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-90"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">GEN-102</span><span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">ESI 3</span></div><span class="px-2 py-0.5 rounded-full bg-error/10 text-error font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> Occupied</span></div><div class="p-space-md bg-surface-container-low rounded-lg my-space-md flex flex-col gap-2"><div class="flex items-start justify-between"><div class="flex flex-col"><span class="font-body-md text-body-md font-bold text-on-surface">A. Simmons #3129</span><span class="font-label-sm text-label-sm text-outline">ESI 3 • Urgent</span></div><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container-lowest text-on-surface-variant font-mono">Dr. Alvarez</span></div><p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Post-operative care • Stable Vitals</p><div class="flex items-center gap-3 pt-1 text-outline font-label-sm text-label-sm"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">radiology</span> Scans Completed</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_pharmacy</span> Meds Administered</span></div></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Transfer / Discharge</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-85"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">GEN-103</span><span class="px-2 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm">GENERAL</span></div><span class="px-2 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Available</span></div><div class="py-6 flex flex-col items-center justify-center text-center bg-surface/60 rounded-lg my-space-md"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline mb-2"><span class="material-symbols-outlined text-[20px]">check</span></div><span class="font-body-md text-body-md font-medium text-on-surface">Ready for intake</span><span class="font-label-sm text-label-sm text-outline mt-0.5">Standard bed staged</span></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Assign Patient</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div><div class="group relative bg-surface-container-lowest/80 rounded-xl p-space-lg shadow-sm flex flex-col justify-between transition-all opacity-85"><div class="flex items-center justify-between pb-space-sm"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-bold text-on-surface">ISO-01</span><span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm">AIRWAY</span></div><span class="px-2 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Available</span></div><div class="py-6 flex flex-col items-center justify-center text-center bg-surface/60 rounded-lg my-space-md"><div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-outline mb-2"><span class="material-symbols-outlined text-[20px]">air</span></div><span class="font-body-md text-body-md font-medium text-on-surface">Negative Pressure Certified</span><span class="font-label-sm text-label-sm text-outline mt-0.5">Airflow validated</span></div><div class="pt-space-sm flex flex-col gap-1.5"><button class="w-full h-9 rounded-lg bg-surface-container-high text-outline font-body-md text-body-md font-medium cursor-not-allowed opacity-60 flex items-center justify-center gap-2 shadow-none select-none" disabled="" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Assign Patient</span></button><div class="flex items-center justify-center gap-1 text-center font-label-sm text-label-sm text-outline"><span class="material-symbols-outlined text-[12px] text-status-critical">wifi_off</span><span>Actions disabled while offline</span></div></div></div></div>
+<!-- Diagnostic & Protocol Bottom Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-error-container text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">fmd_bad</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Clinical Downtime Protocol #MED-802</span>
+<span class="font-body-md text-body-md text-on-surface-variant">
+            All automatic bed allocations and electronic transfer orders are halted. Please record manual bed bookings on Form 14-B (Nursing Station clipboard) until WebSocket reconnects.
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="h-9 px-4 rounded-lg bg-surface-container-lowest hover:bg-surface text-on-surface font-body-md text-body-md font-medium transition-colors shadow-sm flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Print Downtime Sheet</span>
+</button>
+<button class="h-9 px-4 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-body-md text-body-md font-medium transition-colors shadow-sm flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span>Contact IT Desk (#4401)</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div>
+
+
+
+</body></html>

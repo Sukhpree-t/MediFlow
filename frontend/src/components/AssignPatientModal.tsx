@@ -1,212 +1,321 @@
 import React, { useState } from 'react';
-import { Bed, Patient, ConflictResponse } from '../types';
-import { useAuth } from '../context/AuthContext';
+import { Bed, Patient } from '../types';
 import api from '../api/client';
-import { X, AlertTriangle, CheckCircle, RefreshCw, UserCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { AcuityBadge } from './StatusBadge';
 
 interface AssignPatientModalProps {
   bed: Bed;
   waitingPatients: Patient[];
+  allBeds: Bed[];
   onClose: () => void;
-  onSuccess: (bed: Bed) => void;
-  onRefreshBed: (bed: Bed) => void;
+  onSuccess: () => void;
+  onSelectAlternativeBed?: (newBed: Bed) => void;
 }
 
 export const AssignPatientModal: React.FC<AssignPatientModalProps> = ({
   bed,
   waitingPatients,
+  allBeds,
   onClose,
   onSuccess,
-  onRefreshBed,
+  onSelectAlternativeBed,
 }) => {
   const { user } = useAuth();
-  const [selectedPatientId, setSelectedPatientId] = useState<number | ''>(
-    waitingPatients.length > 0 ? waitingPatients[0].id : ''
+  const [selectedPatientId, setSelectedPatientId] = useState<number>(
+    waitingPatients[0]?.id || 0
   );
-  const [attendingDoctor, setAttendingDoctor] = useState('Dr. Priya Sharma');
-  const [notes, setNotes] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [conflictError, setConflictError] = useState<string | null>(null);
+  const [attendingDoctor, setAttendingDoctor] = useState<string>('Dr. Arjun Mehta, MD');
+  const [notes, setNotes] = useState<string>('Patient admitted via Emergency Department triage');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [conflictError, setConflictError] = useState<{
+    message: string;
+    latestBed?: Bed;
+  } | null>(null);
 
-  // Filter patients recommended for this ward or any if no exact match
-  const filteredPatients = waitingPatients.filter(
-    (p) => !p.recommendedWard || p.recommendedWard === bed.wardType
-  );
-  const patientsToDisplay = filteredPatients.length > 0 ? filteredPatients : waitingPatients;
+  const alternativeBeds = allBeds.filter(
+    (b) => b.id !== bed.id && b.status === 'AVAILABLE' && b.wardType === bed.wardType
+  ).slice(0, 3);
 
-  const handleAssign = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!selectedPatientId) return;
-    setLoading(true);
+
+    setIsSubmitting(true);
     setConflictError(null);
 
     try {
       await api.post('/admissions', {
         bedId: bed.id,
-        patientId: Number(selectedPatientId),
+        patientId: selectedPatientId,
         expectedVersion: bed.version,
         attendingDoctor,
         notes,
         terminalId: user?.terminalId || 'ER-DESK-1',
       });
-
-      // Get latest bed status and close modal
-      const res = await api.get(`/beds/${bed.id}`);
-      onSuccess(res.data);
+      onSuccess();
       onClose();
     } catch (err: any) {
       if (err.response?.status === 409) {
-        // Concurrency conflict handled cleanly!
-        const conflictData: ConflictResponse = err.response.data;
-        setConflictError(
-          conflictData.message ||
-            'Bed state updated by another terminal. Concurrency collision resolved cleanly.'
-        );
-        if (conflictData.latestBed) {
-          onRefreshBed(conflictData.latestBed);
-        } else {
-          // Fallback fetch latest
-          api.get(`/beds/${bed.id}`).then((r) => onRefreshBed(r.data));
-        }
+        setConflictError({
+          message:
+            err.response.data?.message ||
+            `Bed ${bed.bedCode} was modified concurrently by another terminal. Reloaded latest state.`,
+          latestBed: err.response.data?.latestBed,
+        });
       } else {
-        setConflictError(
-          err.response?.data?.message || 'Failed to allocate bed. Please try again.'
-        );
+        alert(err.response?.data?.message || 'Failed to assign patient to bed');
       }
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
+  const selectedPatient = waitingPatients.find((p) => p.id === selectedPatientId);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 font-mono font-bold text-sm">
-              {bed.bedCode}
-            </div>
-            <div>
-              <h3 className="font-headline font-bold text-slate-900 text-base">
-                Assign Bed Allocation
-              </h3>
-              <p className="text-xs text-slate-500 font-mono">
-                {bed.wardType} Ward • Floor {bed.floorNumber} •{' '}
-                <span className="text-blue-600 font-semibold">@Version v{bed.version}</span>
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Conflict Alert Banner */}
-        {conflictError && (
-          <div className="mx-6 mt-4 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-start gap-3 text-xs leading-relaxed">
-            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <span className="font-semibold block text-amber-800">
-                Optimistic Locking Guard Triggered (HTTP 409)
+    <div className="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-150">
+      <div className="relative w-full max-w-2xl bg-surface-card rounded-2xl shadow-2xl flex flex-col overflow-hidden my-auto border border-border-subtle">
+        {/* Top Bed Status Banner */}
+        <div className="bg-surface-container-low px-6 py-3 flex items-center justify-between border-b border-border-subtle">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600" />
+            </span>
+            <div className="flex items-center gap-2 truncate">
+              <span className="font-mono text-sm font-bold text-on-surface">
+                Bed {bed.bedCode}
               </span>
-              <span>{conflictError}</span>
-              <div className="mt-2 text-[11px] text-amber-700 font-mono">
-                Bed card has been auto-refreshed with latest server state.
-              </div>
+              <span className="text-outline text-xs">•</span>
+              <span className="text-xs text-emerald-700 font-semibold uppercase font-mono">
+                {bed.status} (Ready for intake)
+              </span>
+              <span className="text-outline text-xs">•</span>
+              <span className="text-xs text-on-surface-variant font-medium">
+                {bed.wardType} Ward • Floor {bed.floorNumber}
+              </span>
             </div>
           </div>
-        )}
-
-        {/* Modal Form */}
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-              Select Waiting Patient
-            </label>
-            {patientsToDisplay.length === 0 ? (
-              <p className="text-xs text-slate-500 italic p-3 bg-slate-50 rounded-lg border border-slate-200">
-                No waiting patients in triage queue.
-              </p>
-            ) : (
-              <select
-                value={selectedPatientId}
-                onChange={(e) => setSelectedPatientId(Number(e.target.value))}
-                className="w-full text-xs rounded-lg border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2.5 bg-white border"
-              >
-                {patientsToDisplay.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    [{p.patientCode}] {p.fullName} (Age {p.age}, Acuity {p.acuityLevel} -{' '}
-                    {p.chiefComplaint.substring(0, 30)}...)
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-              Attending Doctor
-            </label>
-            <input
-              type="text"
-              value={attendingDoctor}
-              onChange={(e) => setAttendingDoctor(e.target.value)}
-              className="w-full text-xs rounded-lg border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2.5 bg-white border"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-              Admission Clinical Notes
-            </label>
-            <textarea
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Immediate clinical protocol, monitoring intervals, ventilator instructions..."
-              className="w-full text-xs rounded-lg border-slate-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 p-2.5 bg-white border"
-            />
-          </div>
-
-          <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 text-[11px] text-slate-600 flex items-center justify-between">
-            <span className="font-mono">Expected JPA Version:</span>
-            <span className="font-mono font-bold text-blue-700 px-2 py-0.5 bg-white rounded border border-blue-200">
-              v{bed.version}
+          <div className="flex items-center gap-1.5 shrink-0 bg-surface-card px-2.5 py-1 rounded-md border border-border-subtle shadow-2xs">
+            <span className="material-symbols-outlined text-primary text-[15px]">
+              lock
+            </span>
+            <span className="font-mono text-xs text-primary font-bold">
+              v{bed.version} (JPA Lock)
             </span>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
+        {/* Modal Header */}
+        <div className="px-6 pt-5 pb-2 flex items-center justify-between">
+          <div>
+            <h2 className="font-headline font-bold text-xl text-on-surface">
+              Assign Patient to {bed.bedCode}
+            </h2>
+            <p className="text-xs text-on-surface-variant mt-0.5">
+              Select an admitted ER patient to allocate to this monitored bed.
+            </p>
+          </div>
           <button
-            type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200 rounded-lg transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
           >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleAssign}
-            disabled={loading || patientsToDisplay.length === 0 || bed.status !== 'AVAILABLE'}
-            className="px-5 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-sm flex items-center gap-2 transition-colors"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                Allocating...
-              </>
-            ) : (
-              <>
-                <UserCheck className="w-3.5 h-3.5" />
-                Confirm Bed Allocation
-              </>
-            )}
+            <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
+
+        {/* Modal Content */}
+        <form onSubmit={handleSubmit} className="px-6 py-4 flex flex-col gap-4">
+          {/* Concurrency Conflict Banner (HTTP 409) */}
+          {conflictError && (
+            <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4 flex flex-col gap-3 animate-in shake duration-200">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-[20px] font-bold">
+                    priority_high
+                  </span>
+                </div>
+                <div className="flex-1 text-sm text-red-950 leading-snug">
+                  <p className="font-bold text-red-900 text-sm">
+                    ⚠️ Concurrency Collision Detected (@Version Mismatch)
+                  </p>
+                  <p className="text-xs text-red-800 mt-1">
+                    {bed.bedCode} was just assigned or locked by another hospital terminal.
+                    Your optimistic lock version (v{bed.version}) is stale.
+                  </p>
+                </div>
+              </div>
+
+              {/* Suggested Free Beds */}
+              {alternativeBeds.length > 0 && (
+                <div className="flex flex-col gap-2 pt-2 border-t border-red-200">
+                  <span className="text-xs font-semibold text-slate-700 uppercase tracking-wide">
+                    Suggested free alternative beds ready for intake:
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    {alternativeBeds.map((altBed) => (
+                      <button
+                        key={altBed.id}
+                        type="button"
+                        onClick={() => {
+                          if (onSelectAlternativeBed) {
+                            onSelectAlternativeBed(altBed);
+                          }
+                        }}
+                        className="p-2.5 rounded-lg border border-slate-200 bg-white hover:border-primary hover:bg-blue-50/50 transition-all text-left flex flex-col justify-between group shadow-2xs"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono font-bold text-sm text-slate-900 group-hover:text-primary">
+                            {altBed.bedCode}
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold">
+                            v{altBed.version}
+                          </span>
+                        </div>
+                        <span className="text-[11px] text-slate-500 mt-1">
+                          Floor {altBed.floorNumber} • {altBed.hasVentilator ? 'Ventilator' : 'Standard'}
+                        </span>
+                        <span className="text-[11px] font-semibold text-primary mt-1 flex items-center gap-0.5">
+                          <span>Select this bed</span>
+                          <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Select Waiting Triage Patient */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+              Select Waiting Triage Patient <span className="text-red-500">*</span>
+            </label>
+            {waitingPatients.length === 0 ? (
+              <div className="p-4 rounded-xl border border-dashed border-slate-300 text-center text-xs text-slate-500 bg-slate-50">
+                No waiting triage patients in ER queue. You can create a new patient in the ER Triage Queue page.
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <select
+                  value={selectedPatientId}
+                  onChange={(e) => setSelectedPatientId(Number(e.target.value))}
+                  className="w-full py-2.5 px-3 bg-white border border-border-subtle rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                  required
+                >
+                  {waitingPatients.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      [{p.patientCode}] {p.fullName} ({p.age}y) — Acuity {p.acuityLevel} — {p.chiefComplaint}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Patient Summary Card */}
+                {selectedPatient && (
+                  <div className="p-3 bg-slate-50 rounded-xl border border-border-subtle flex items-start justify-between text-xs">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900">{selectedPatient.fullName}</span>
+                        <span className="font-mono text-slate-500">[{selectedPatient.patientCode}]</span>
+                        <span className="text-slate-400">•</span>
+                        <span className="text-slate-600">{selectedPatient.age}y / {selectedPatient.gender}</span>
+                      </div>
+                      <p className="text-slate-600">
+                        <strong className="text-slate-800">Complaint:</strong> {selectedPatient.chiefComplaint}
+                      </p>
+                      {selectedPatient.vitalsSummary && (
+                        <p className="font-mono text-[11px] text-slate-500">
+                          <strong>Vitals:</strong> {selectedPatient.vitalsSummary}
+                        </p>
+                      )}
+                    </div>
+                    <AcuityBadge level={selectedPatient.acuityLevel} />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Attending Physician & Terminal */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                Attending Physician
+              </label>
+              <input
+                type="text"
+                value={attendingDoctor}
+                onChange={(e) => setAttendingDoctor(e.target.value)}
+                className="w-full py-2 px-3 bg-white border border-border-subtle rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none"
+                placeholder="Dr. Full Name"
+                required
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                Operating Terminal
+              </label>
+              <input
+                type="text"
+                value={user?.terminalId || 'ER-DESK-1'}
+                disabled
+                className="w-full py-2 px-3 bg-slate-100 border border-border-subtle rounded-xl text-sm font-mono text-slate-600 cursor-not-allowed"
+              />
+            </div>
+          </div>
+
+          {/* Clinical Notes */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
+              Admission Notes / Triage Handover
+            </label>
+            <textarea
+              rows={2}
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              className="w-full py-2 px-3 bg-white border border-border-subtle rounded-xl text-sm font-normal focus:ring-2 focus:ring-primary focus:outline-none"
+              placeholder="Clinical instructions, precautions, isolation requirements..."
+            />
+          </div>
+
+          {/* Footer Actions */}
+          <div className="pt-2 flex items-center justify-between border-t border-border-subtle mt-1">
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+              <span className="material-symbols-outlined text-[15px] text-primary">verified</span>
+              <span>Atomic JPA @Version Check v{bed.version}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSubmitting || waitingPatients.length === 0}
+                className="px-5 py-2 rounded-xl text-sm font-semibold bg-primary hover:bg-blue-700 text-white shadow-md transition-all flex items-center gap-2 disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Allocating...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                    <span>Confirm Allocation</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );

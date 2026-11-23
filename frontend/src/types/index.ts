@@ -73,3 +73,26 @@ export interface ConflictResponse {
   message: string;
   latestBed?: Bed;
 }
+
+export interface StaffUser {
+  id: number;
+  employeeId: string;
+  fullName: string;
+  email: string;
+  role: StaffRole | string;
+  assignedTerminal: string;
+}
+
+export interface AdmissionRequest {
+  bedId: number;
+  patientId: number;
+  expectedVersion: number;
+  attendingDoctor?: string;
+  notes?: string;
+  terminalId: string;
+}
+
+export interface DischargeRequest {
+  terminalId: string;
+  notes?: string;
+}

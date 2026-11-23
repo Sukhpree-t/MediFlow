@@ -70,4 +70,19 @@ public class AuthController {
 
         return login(new LoginRequestDTO(email, "MediFlow@2026", terminal));
     }
+
+    @GetMapping("/staff")
+    public ResponseEntity<java.util.List<com.mediflow.dto.StaffUserDTO>> getStaffDirectory() {
+        java.util.List<com.mediflow.dto.StaffUserDTO> staff = staffUserRepository.findAll().stream()
+                .map(s -> new com.mediflow.dto.StaffUserDTO(
+                        s.getId(),
+                        s.getEmployeeId(),
+                        s.getFullName(),
+                        s.getEmail(),
+                        s.getRole().name(),
+                        s.getAssignedTerminal()
+                ))
+                .toList();
+        return ResponseEntity.ok(staff);
+    }
 }

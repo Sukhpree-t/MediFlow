@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/audit-logs").hasAnyAuthority(
                                 "ROLE_ADMIN", "ROLE_ER_COORDINATOR")
                         .requestMatchers(HttpMethod.PATCH, "/api/beds/**").hasAnyAuthority(
-                                "ROLE_ER_COORDINATOR", "ROLE_ADMIN")
+                                "ROLE_ER_COORDINATOR", "ROLE_WARD_NURSE", "ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/triage").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/admissions").hasAnyAuthority(
                                 "ROLE_ER_COORDINATOR", "ROLE_ADMIN")
