@@ -1,0 +1,39 @@
+# ============================================================
+# MediFlow — Render Blueprint
+# Deploys the Spring Boot backend as a Web Service
+# https://render.com/docs/blueprint-spec
+# ============================================================
+
+services:
+  - type: web
+    name: mediflow-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    branch: main
+    healthCheckPath: /actuator/health
+
+    # Environment variables — set SECRET values in Render dashboard
+    envVars:
+      - key: SUPABASE_DB_URL
+        sync: false          # Set manually in Render dashboard
+
+      - key: SUPABASE_DB_USER
+        sync: false          # Set manually in Render dashboard
+
+      - key: SUPABASE_DB_PASSWORD
+        sync: false          # Set manually in Render dashboard
+
+      - key: JWT_SECRET
+        generateValue: true  # Render auto-generates a secure random value
+
+      - key: ALLOWED_ORIGINS
+        value: https://mediflow2.vercel.app
+
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      - key: JAVA_TOOL_OPTIONS
+        value: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
