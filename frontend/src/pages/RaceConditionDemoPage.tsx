@@ -1,93 +1,191 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Bed, Patient } from '../types';
 import api from '../api/client';
 
 const DEFAULT_CLINICAL_BEDS: Bed[] = [
-  { id: 1, bedCode: 'ICU-01', wardType: 'ICU', floorNumber: 3, status: 'AVAILABLE', hasVentilator: true, version: 1, updatedAt: new Date().toISOString() },
-  { id: 2, bedCode: 'ICU-02', wardType: 'ICU', floorNumber: 3, status: 'AVAILABLE', hasVentilator: true, version: 1, updatedAt: new Date().toISOString() },
-  { id: 4, bedCode: 'GEN-101', wardType: 'GENERAL', floorNumber: 2, status: 'AVAILABLE', hasVentilator: false, version: 1, updatedAt: new Date().toISOString() },
-];
-
-const DEFAULT_WAITING_PATIENTS: Patient[] = [
-  { id: 1, patientCode: 'ER-2041', fullName: 'Eleanor Vance', age: 54, gender: 'F', chiefComplaint: 'Severe chest pain radiating to left arm', vitalsSummary: 'BP: 148/92, HR: 102, SpO2: 95%', acuityLevel: 1, recommendedWard: 'ICU', status: 'WAITING', arrivalTime: new Date().toISOString() },
-  { id: 2, patientCode: 'ER-2042', fullName: 'James Wilson', age: 29, gender: 'M', chiefComplaint: 'Motor vehicle accident, compound tibia fracture', vitalsSummary: 'BP: 124/80, HR: 88, SpO2: 98%', acuityLevel: 2, recommendedWard: 'GENERAL', status: 'WAITING', arrivalTime: new Date().toISOString() },
+  { id: 1, bedCode: 'ICU-01', wardType: 'ICU', floorNumber: 2, status: 'AVAILABLE', hasVentilator: true, version: 1, updatedAt: new Date().toISOString() },
+  { id: 2, bedCode: 'ICU-02', wardType: 'ICU', floorNumber: 2, status: 'AVAILABLE', hasVentilator: true, version: 1, updatedAt: new Date().toISOString() },
+  { id: 4, bedCode: 'GEN-101', wardType: 'GENERAL', floorNumber: 1, status: 'AVAILABLE', hasVentilator: false, version: 1, updatedAt: new Date().toISOString() },
 ];
 
 export const RaceConditionDemoPage: React.FC = () => {
   const [beds, setBeds] = useState<Bed[]>(DEFAULT_CLINICAL_BEDS);
-  const [patients, setPatients] = useState<Patient[]>(DEFAULT_WAITING_PATIENTS);
-  const [selectedBedId, setSelectedBedId] = useState<number | null>(DEFAULT_CLINICAL_BEDS[0].id);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [selectedBedId, setSelectedBedId] = useState<number | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isResetting, setIsResetting] = useState<boolean>(false);
   const [terminalAResult, setTerminalAResult] = useState<any>(null);
   const [terminalBResult, setTerminalBResult] = useState<any>(null);
   const [simulationLogs, setSimulationLogs] = useState<string[]>([]);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const [bedsRes, triageRes] = await Promise.all([
         api.get<Bed[]>('/beds'),
         api.get<Patient[]>('/triage'),
       ]);
+
       const loadedBeds = Array.isArray(bedsRes.data) && bedsRes.data.length > 0 ? bedsRes.data : DEFAULT_CLINICAL_BEDS;
       setBeds(loadedBeds);
+
       const waiting = Array.isArray(triageRes.data)
         ? triageRes.data.filter((p) => p.status === 'WAITING')
-        : DEFAULT_WAITING_PATIENTS;
+        : [];
       setPatients(waiting);
 
-      const firstAvailable = loadedBeds.find((b) => b.status === 'AVAILABLE');
-      if (firstAvailable && !selectedBedId) {
-        setSelectedBedId(firstAvailable.id);
-      }
+      // Auto-select first AVAILABLE bed if none currently selected or if selected bed is missing
+      setSelectedBedId((prevId) => {
+        if (prevId && loadedBeds.some((b) => b.id === prevId)) {
+          return prevId;
+        }
+        const firstAvailable = loadedBeds.find((b) => b.status === 'AVAILABLE');
+        return firstAvailable ? firstAvailable.id : loadedBeds[0]?.id || 1;
+      });
     } catch (err) {
       console.warn('Backend unavailable; running simulation on memory baseline:', err);
       setBeds(DEFAULT_CLINICAL_BEDS);
-      setPatients(DEFAULT_WAITING_PATIENTS);
+      setSelectedBedId(DEFAULT_CLINICAL_BEDS[0].id);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
-  const selectedBed = beds.find((b) => b.id === selectedBedId);
+  const selectedBed = beds.find((b) => b.id === selectedBedId) || beds[0];
 
-  const resetTargetBed = async () => {
-    if (!selectedBed) return;
+  // Helper to ensure at least 2 waiting patients in the queue for the race
+  const ensurePatientsForRace = async (): Promise<Patient[]> => {
+    let currentPatients = [...patients];
+    if (currentPatients.length >= 2) {
+      return currentPatients;
+    }
+
+    setSimulationLogs((prev) => [
+      `[${new Date().toLocaleTimeString()}] ℹ️ Fewer than 2 waiting patients found. Auto-provisioning emergency triage candidates...`,
+      ...prev,
+    ]);
+
+    const demoCandidates = [
+      {
+        fullName: 'Eleanor Vance (Demo Patient)',
+        age: 54,
+        gender: 'F' as const,
+        chiefComplaint: 'Acute chest pain radiating to left arm',
+        vitalsSummary: 'BP: 148/92, HR: 104, SpO2: 95%',
+        acuityLevel: 1,
+        recommendedWard: selectedBed?.wardType || 'ICU',
+      },
+      {
+        fullName: 'James Wilson (Demo Patient)',
+        age: 29,
+        gender: 'M' as const,
+        chiefComplaint: 'Trauma with compound fracture',
+        vitalsSummary: 'BP: 122/80, HR: 88, SpO2: 98%',
+        acuityLevel: 2,
+        recommendedWard: selectedBed?.wardType || 'ICU',
+      },
+    ];
+
     try {
-      await api.patch(`/beds/${selectedBed.id}/status`, {
+      for (let i = currentPatients.length; i < 2; i++) {
+        const candidate = demoCandidates[i] || demoCandidates[0];
+        const res = await api.post<Patient>('/triage', candidate);
+        if (res.data && res.data.id) {
+          currentPatients.push(res.data);
+        }
+      }
+      setPatients(currentPatients);
+      return currentPatients;
+    } catch (err) {
+      console.warn('Could not auto-provision triage candidates:', err);
+      // Fallback local mock patients if API fails
+      const fallbackA: Patient = { id: 991, patientCode: 'DEMO-A', fullName: 'Eleanor Vance', age: 54, gender: 'F', chiefComplaint: 'Chest pain', vitalsSummary: 'Stable', acuityLevel: 1, recommendedWard: 'ICU', status: 'WAITING', arrivalTime: new Date().toISOString() };
+      const fallbackB: Patient = { id: 992, patientCode: 'DEMO-B', fullName: 'James Wilson', age: 29, gender: 'M', chiefComplaint: 'Trauma', vitalsSummary: 'Stable', acuityLevel: 2, recommendedWard: 'ICU', status: 'WAITING', arrivalTime: new Date().toISOString() };
+      return [fallbackA, fallbackB];
+    }
+  };
+
+  // Reset bed cleanly: discharge if occupied, then patch to AVAILABLE
+  const resetTargetBed = async (silent: boolean = false): Promise<Bed | null> => {
+    if (!selectedBed) return null;
+    setIsResetting(true);
+    try {
+      // 1. If currently occupied, discharge first to clear active admission record
+      if (selectedBed.status === 'OCCUPIED') {
+        try {
+          await api.post(`/admissions/${selectedBed.id}/discharge`, {
+            notes: 'Discharged for OCC Simulation Demo',
+            terminalId: 'DEMO-RESET',
+          });
+        } catch (dischargeErr) {
+          console.warn('Discharge call skipped or already clean:', dischargeErr);
+        }
+      }
+
+      // 2. Patch bed to AVAILABLE
+      const patchRes = await api.patch<Bed>(`/beds/${selectedBed.id}/status`, {
         status: 'AVAILABLE',
+        terminalId: 'DEMO-RESET',
       });
+
+      const updatedBed = patchRes.data || { ...selectedBed, status: 'AVAILABLE', version: selectedBed.version + 1 };
+
       setTerminalAResult(null);
       setTerminalBResult(null);
-      setSimulationLogs((prev) => [
-        `[${new Date().toLocaleTimeString()}] Bed ${selectedBed.bedCode} manually reset to AVAILABLE for testing.`,
-        ...prev,
-      ]);
-      loadData();
+
+      if (!silent) {
+        setSimulationLogs((prev) => [
+          `[${new Date().toLocaleTimeString()}] 🔄 Bed ${selectedBed.bedCode} successfully reset to AVAILABLE (v${updatedBed.version}). Ready for race simulation.`,
+          ...prev,
+        ]);
+      }
+
+      await loadData();
+      return updatedBed;
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to reset bed');
+      console.error('Failed to reset bed:', err);
+      if (!silent) {
+        alert(err.response?.data?.message || 'Failed to reset bed');
+      }
+      return null;
+    } finally {
+      setIsResetting(false);
     }
   };
 
   const handleSimulateRace = async () => {
     if (!selectedBed) return;
-    if (patients.length < 2) {
-      alert('Need at least 2 waiting triage patients to simulate race condition.');
-      return;
-    }
-
     setIsRunning(true);
     setTerminalAResult(null);
     setTerminalBResult(null);
 
-    const bedId = selectedBed.id;
-    const version = selectedBed.version;
-    const patientA = patients[0];
-    const patientB = patients[1];
+    let activeBed = selectedBed;
+
+    // Pre-flight check: If the bed is already OCCUPIED or CLEANING, reset it to AVAILABLE first
+    if (activeBed.status !== 'AVAILABLE') {
+      setSimulationLogs((prev) => [
+        `[${new Date().toLocaleTimeString()}] ⚠️ Bed ${activeBed.bedCode} is ${activeBed.status}. Automatically resetting to AVAILABLE first so the race can execute cleanly...`,
+        ...prev,
+      ]);
+      const freshlyReset = await resetTargetBed(true);
+      if (freshlyReset) {
+        activeBed = freshlyReset;
+      }
+    }
+
+    // Ensure we have at least 2 patients to compete
+    const readyPatients = await ensurePatientsForRace();
+    const patientA = readyPatients[0];
+    const patientB = readyPatients[1];
+
+    const bedId = activeBed.id;
+    const version = activeBed.version;
 
     setSimulationLogs((prev) => [
-      `[${new Date().toLocaleTimeString()}] 🚀 Initiating simultaneous allocation race on bed ${selectedBed.bedCode} (expectedVersion: v${version})...`,
+      `[${new Date().toLocaleTimeString()}] 🚀 Initiating simultaneous allocation race on ${activeBed.bedCode} (expectedVersion: v${version})...`,
+      `[${new Date().toLocaleTimeString()}] ⚡ Terminal A dispatching for Patient ${patientA.fullName || patientA.patientCode}...`,
+      `[${new Date().toLocaleTimeString()}] ⚡ Terminal B dispatching for Patient ${patientB.fullName || patientB.patientCode}...`,
       ...prev,
     ]);
 
@@ -105,7 +203,7 @@ export const RaceConditionDemoPage: React.FC = () => {
       .catch((err) => ({
         success: false,
         status: err.response?.status || 500,
-        data: err.response?.data || err.message,
+        data: err.response?.data || { message: err.message },
       }));
 
     const promiseB = api
@@ -121,7 +219,7 @@ export const RaceConditionDemoPage: React.FC = () => {
       .catch((err) => ({
         success: false,
         status: err.response?.status || 500,
-        data: err.response?.data || err.message,
+        data: err.response?.data || { message: err.message },
       }));
 
     const [resA, resB] = await Promise.all([promiseA, promiseB]);
@@ -129,18 +227,37 @@ export const RaceConditionDemoPage: React.FC = () => {
     setTerminalAResult(resA);
     setTerminalBResult(resB);
 
-    const winner = resA.success ? 'Terminal A (ER-DESK-1)' : resB.success ? 'Terminal B (TRAUMA-BAY-2)' : 'Neither';
-    const loser = !resA.success ? 'Terminal A' : !resB.success ? 'Terminal B' : 'None';
-
-    setSimulationLogs((prev) => [
-      `[${new Date().toLocaleTimeString()}] 🏆 ${winner} acquired lock and successfully admitted patient!`,
-      `[${new Date().toLocaleTimeString()}] 🛡️ ${loser} rejected with HTTP 409 Conflict (OptimisticLockException triggered, zero database overwrite)!`,
-      ...prev,
-    ]);
+    if (resA.success && !resB.success) {
+      setSimulationLogs((prev) => [
+        `[${new Date().toLocaleTimeString()}] 🏆 Terminal A (ER-DESK-1) ACQUIRED LOCK! Version bumped v${version} → v${version + 1}.`,
+        `[${new Date().toLocaleTimeString()}] 🛡️ Terminal B (TRAUMA-BAY-2) REJECTED with HTTP 409 Conflict. OptimisticLockException caught — zero database corruption!`,
+        ...prev,
+      ]);
+    } else if (!resA.success && resB.success) {
+      setSimulationLogs((prev) => [
+        `[${new Date().toLocaleTimeString()}] 🏆 Terminal B (TRAUMA-BAY-2) ACQUIRED LOCK! Version bumped v${version} → v${version + 1}.`,
+        `[${new Date().toLocaleTimeString()}] 🛡️ Terminal A (ER-DESK-1) REJECTED with HTTP 409 Conflict. OptimisticLockException caught — zero database corruption!`,
+        ...prev,
+      ]);
+    } else if (resA.success && resB.success) {
+      setSimulationLogs((prev) => [
+        `[${new Date().toLocaleTimeString()}] ⚠️ Unexpected: Both acquired bed. Check transaction isolation level.`,
+        ...prev,
+      ]);
+    } else {
+      const msgA = resA.data?.message || 'Conflict';
+      const msgB = resB.data?.message || 'Conflict';
+      setSimulationLogs((prev) => [
+        `[${new Date().toLocaleTimeString()}] ℹ️ Collision handled: Neither acquired bed (Terminal A: ${msgA} | Terminal B: ${msgB}). Database safely maintained.`,
+        ...prev,
+      ]);
+    }
 
     setIsRunning(false);
-    loadData();
+    await loadData();
   };
+
+  const isBedAvailable = selectedBed?.status === 'AVAILABLE';
 
   return (
     <div className="w-full flex flex-col gap-6 p-6">
@@ -157,7 +274,7 @@ export const RaceConditionDemoPage: React.FC = () => {
             Multi-Terminal Race Condition & Collision Simulator
           </h2>
           <p className="text-xs text-slate-500 max-w-2xl mt-1">
-            Simulate two hospital terminals attempting to allocate the same bed at the exact same millisecond. Watch JPA optimistic concurrency control prevent double-booking with zero-overwrite guarantees and sub-100ms WebSocket alerts.
+            Simulate two hospital terminals attempting to allocate the same bed at the exact same millisecond. Watch JPA optimistic concurrency control prevent double-booking with zero-overwrite guarantees and live sub-100ms WebSocket updates.
           </p>
         </div>
 
@@ -169,31 +286,40 @@ export const RaceConditionDemoPage: React.FC = () => {
             </label>
             <select
               value={selectedBedId || ''}
-              onChange={(e) => setSelectedBedId(Number(e.target.value))}
-              className="py-1.5 px-3 rounded-xl border border-border-subtle bg-slate-50 text-xs font-mono font-bold"
+              onChange={(e) => {
+                setSelectedBedId(Number(e.target.value));
+                setTerminalAResult(null);
+                setTerminalBResult(null);
+              }}
+              className="py-1.5 px-3 rounded-xl border border-border-subtle bg-slate-50 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               {beds.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.bedCode} ({b.status} - v{b.version})
+                  {b.status === 'AVAILABLE' ? '🟢' : b.status === 'OCCUPIED' ? '🔴' : '🟡'} {b.bedCode} ({b.status} - v{b.version})
                 </option>
               ))}
             </select>
           </div>
 
           <button
-            onClick={resetTargetBed}
-            className="mt-4 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors flex items-center gap-1"
+            onClick={() => resetTargetBed(false)}
+            disabled={isResetting}
+            className="mt-4 px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-50 transition-colors flex items-center gap-1.5 shadow-2xs"
             title="Reset Bed to AVAILABLE"
           >
-            <span className="material-symbols-outlined text-[16px]">restart_alt</span>
-            <span>Reset Bed</span>
+            <span className={`material-symbols-outlined text-[16px] ${isResetting ? 'animate-spin' : ''}`}>
+              restart_alt
+            </span>
+            <span>{isResetting ? 'Resetting...' : 'Reset Bed'}</span>
           </button>
         </div>
       </div>
 
-      {/* Target Bed Current State */}
+      {/* Target Bed Current State & Notice */}
       {selectedBed && (
-        <div className="bg-slate-50 rounded-2xl border border-border-subtle p-4 flex items-center justify-between">
+        <div className={`rounded-2xl border p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 transition-colors ${
+          isBedAvailable ? 'bg-slate-50 border-border-subtle' : 'bg-amber-50/60 border-amber-200'
+        }`}>
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-white border border-border-subtle flex items-center justify-center font-mono font-bold text-base text-primary shadow-2xs">
               {selectedBed.bedCode}
@@ -203,6 +329,12 @@ export const RaceConditionDemoPage: React.FC = () => {
                 <span className="font-bold text-slate-900 text-sm">{selectedBed.wardType} Ward</span>
                 <span className="text-slate-400">•</span>
                 <span className="text-xs text-slate-600">Floor {selectedBed.floorNumber}</span>
+                {selectedBed.currentPatient && (
+                  <>
+                    <span className="text-slate-400">•</span>
+                    <span className="text-xs text-slate-700 font-medium">Patient: {selectedBed.currentPatient.fullName}</span>
+                  </>
+                )}
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs font-mono font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded border border-blue-200">
@@ -210,9 +342,9 @@ export const RaceConditionDemoPage: React.FC = () => {
                 </span>
                 <span
                   className={`text-xs font-mono font-bold uppercase px-2 py-0.5 rounded ${
-                    selectedBed.status === 'AVAILABLE'
-                      ? 'bg-emerald-100 text-emerald-800'
-                      : 'bg-red-100 text-red-800'
+                    isBedAvailable
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : 'bg-red-100 text-red-800 border border-red-200'
                   }`}
                 >
                   Status: {selectedBed.status}
@@ -221,27 +353,28 @@ export const RaceConditionDemoPage: React.FC = () => {
             </div>
           </div>
 
-          <button
-            onClick={handleSimulateRace}
-            disabled={isRunning || selectedBed.status !== 'AVAILABLE'}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm shadow-md transition-all flex items-center gap-2 disabled:opacity-50 active:scale-[0.99]"
-          >
-            {isRunning ? (
-              <>
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Firing Race Requests...</span>
-              </>
-            ) : (
-              <>
-                <span className="material-symbols-outlined text-[20px]">bolt</span>
-                <span>Trigger Simultaneous Allocation Race</span>
-              </>
+          <div className="flex items-center gap-3">
+            {!isBedAvailable && (
+              <span className="text-xs text-amber-800 font-medium flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[18px] text-amber-600">info</span>
+                Bed is currently {selectedBed.status}. Triggering race will automatically reset it to AVAILABLE.
+              </span>
             )}
-          </button>
+            <button
+              onClick={handleSimulateRace}
+              disabled={isRunning || isResetting}
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm disabled:opacity-50"
+            >
+              <span className={`material-symbols-outlined text-[18px] ${isRunning ? 'animate-spin' : ''}`}>
+                {isRunning ? 'progress_activity' : 'bolt'}
+              </span>
+              <span>{isRunning ? 'Simulating Race...' : 'Trigger Simultaneous Allocation Race'}</span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Dual Terminal Live Representation */}
+      {/* Terminals Simulation Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Terminal A */}
         <div className="bg-white rounded-2xl border border-border-subtle p-5 shadow-xs flex flex-col justify-between">
@@ -270,25 +403,28 @@ export const RaceConditionDemoPage: React.FC = () => {
                       <span className="material-symbols-outlined text-[20px] text-emerald-600">
                         check_circle
                       </span>
-                      <span>HTTP 201 CREATED — Bed Acquired!</span>
+                      <span>HTTP 201 CREATED — Lock Acquired!</span>
                     </div>
                     <p className="text-xs text-emerald-700 font-mono">
                       Database version bumped: v{selectedBed?.version} → v{(selectedBed?.version || 1) + 1}
                     </p>
                     <p className="text-[11px] text-emerald-600 mt-1">
-                      Admission ID: {terminalAResult.data?.id} • Patient admitted successfully.
+                      Patient successfully admitted into database without collision.
                     </p>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-1.5 text-red-800">
                     <div className="flex items-center gap-2 font-bold text-sm">
                       <span className="material-symbols-outlined text-[20px] text-red-600">
-                        error
+                        block
                       </span>
                       <span>HTTP {terminalAResult.status} CONFLICT — Lock Lost!</span>
                     </div>
                     <p className="text-xs text-red-700 font-mono">
-                      {terminalAResult.data?.message || 'Optimistic locking collision detected.'}
+                      {terminalAResult.data?.message || 'Bed state was updated by another terminal. Stale version detected.'}
+                    </p>
+                    <p className="text-[11px] text-red-600 mt-1">
+                      Optimistic concurrency control prevented double-booking. Zero data corruption.
                     </p>
                   </div>
                 )
@@ -331,25 +467,28 @@ export const RaceConditionDemoPage: React.FC = () => {
                       <span className="material-symbols-outlined text-[20px] text-emerald-600">
                         check_circle
                       </span>
-                      <span>HTTP 201 CREATED — Bed Acquired!</span>
+                      <span>HTTP 201 CREATED — Lock Acquired!</span>
                     </div>
                     <p className="text-xs text-emerald-700 font-mono">
                       Database version bumped: v{selectedBed?.version} → v{(selectedBed?.version || 1) + 1}
+                    </p>
+                    <p className="text-[11px] text-emerald-600 mt-1">
+                      Patient successfully admitted into database without collision.
                     </p>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-1.5 text-red-800">
                     <div className="flex items-center gap-2 font-bold text-sm">
                       <span className="material-symbols-outlined text-[20px] text-red-600">
-                        error
+                        block
                       </span>
                       <span>HTTP {terminalBResult.status} CONFLICT — Collision Handled!</span>
                     </div>
                     <p className="text-xs text-red-700 font-mono">
-                      {terminalBResult.data?.message || 'Bed state was modified concurrently.'}
+                      {terminalBResult.data?.message || 'Bed state was updated by another terminal. Stale version detected.'}
                     </p>
                     <p className="text-[11px] text-red-600 mt-1">
-                      Client notified of stale version without corrupted database state.
+                      Optimistic concurrency control prevented double-booking. Zero data corruption.
                     </p>
                   </div>
                 )
@@ -379,7 +518,7 @@ export const RaceConditionDemoPage: React.FC = () => {
         </div>
         <div className="max-h-48 overflow-y-auto flex flex-col gap-1 text-[11px]">
           {simulationLogs.length === 0 ? (
-            <span className="text-slate-500 italic">No race simulations executed yet.</span>
+            <span className="text-slate-500 italic">No race simulations executed yet. Click 'Trigger Simultaneous Allocation Race' to start.</span>
           ) : (
             simulationLogs.map((log, i) => <div key={i}>{log}</div>)
           )}
